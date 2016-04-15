@@ -19,11 +19,12 @@ public class App
 	public static void main( String[] args ) throws IOException
     {
     	
-    	String auth = "8040c7ad7b09cfc17e0255d3e7d56095f4eb1739";
+    	String auth = " 4fbfa9ddf07e8adc3ae106c740ebc1ed3120d0a4";
     	String userRepo = "ruby";
     	String repoName = "ruby";
     	
-    	GetGitConnection.establishConnection(auth);
+    	//GetGitConnection.establishConnection(auth);
+    	GetGitConnection.establishConnection();
     	gitHub = GetGitConnection.getGitHub();
     	request = new RequestFromRepository();
     	request.setGitHub(gitHub);
@@ -39,12 +40,28 @@ public class App
     	System.out.println();
     	System.out.println();
     	
+    	request.findObjectWith(".travis.yml", "BRANCH");
+    	List<String> list = request.getListOfSetOfBranches();
+    	
+    	for ( String s : list) {
+    		System.out.println("Branch: "+s+" does not have .travis.yml");
+    	}
+    	
     	request.getAllTags();
     	List<String> tags = request.getListOfAllTags();
     	for ( String s: tags) {
     		System.out.println("Tag: "+s);
     	}
     	
+    	System.out.println();
+    	System.out.println();
+    	
+    	request.findObjectWith(".travis.yml", "TAG");
+    	list = request.getListOfSetOfBranches();
+    	
+    	for ( String s : list) {
+    		System.out.println("Tag: "+s+" does not have .travis.yml");
+    	}
     	
     }
 }
