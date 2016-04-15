@@ -7,3 +7,8 @@ are running from the command line.
 
 4. From Eclipse, upload the downloaded project into eclipse, and run the project 
 as a java application.
+
+PS:
+a. You can change the authorisation key in the main file ( App.java ) to include yours
+or for each specific IP address, GitHub API as limited number of usage allow per IP address
+within an hour.
