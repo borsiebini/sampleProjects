@@ -19,7 +19,6 @@ public class App
 	public static void main( String[] args ) throws IOException
     {
     	
-    	String auth = " 4fbfa9ddf07e8adc3ae106c740ebc1ed3120d0a4";
     	String userRepo = "ruby";
     	String repoName = "ruby";
     	
