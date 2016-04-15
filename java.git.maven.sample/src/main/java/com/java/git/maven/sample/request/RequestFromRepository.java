@@ -121,31 +121,31 @@ public class RequestFromRepository {
 			}
 			
 
-			arrayJson = resp.json().readArray();
-			listOfJsonObjects = null;
-			
-			for (int i=0; i<arrayJson.size(); i++) {
-				if (  listOfJsonObjects == null)
-					listOfJsonObjects = new ArrayList<JsonObject>();
-				listOfJsonObjects.add(arrayJson.getJsonObject(i));
-			}
-			
-			String key = null;
-			String value = null;
-			
-			for (JsonObject object : listOfJsonObjects ) {
-				if (this.listOfAllBranches == null)
-					this.listOfAllBranches = new ArrayList<String>();
-				
-				key = object.getString("name");
-				value = object.getJsonObject("commit").getString("sha");
-				this.listOfAllBranches.add(key);
-				
-				if (this.mapBranchToSha == null)
-					this.mapBranchToSha = new HashMap<String, String>();
-				this.mapBranchToSha.put(key, value);
-				
-			}// end for loop.
+//			arrayJson = resp.json().readArray();
+//			listOfJsonObjects = null;
+//			
+//			for (int i=0; i<arrayJson.size(); i++) {
+//				if (  listOfJsonObjects == null)
+//					listOfJsonObjects = new ArrayList<JsonObject>();
+//				listOfJsonObjects.add(arrayJson.getJsonObject(i));
+//			}
+//			
+//			String key = null;
+//			String value = null;
+//			
+//			for (JsonObject object : listOfJsonObjects ) {
+//				if (this.listOfAllBranches == null)
+//					this.listOfAllBranches = new ArrayList<String>();
+//				
+//				key = object.getString("name");
+//				value = object.getJsonObject("commit").getString("sha");
+//				this.listOfAllBranches.add(key);
+//				
+//				if (this.mapBranchToSha == null)
+//					this.mapBranchToSha = new HashMap<String, String>();
+//				this.mapBranchToSha.put(key, value);
+//				
+//			}// end for loop.
 			
 		
 		}// end else-statement.
@@ -310,7 +310,7 @@ public class RequestFromRepository {
 	private boolean isItJsonObject(JsonResponse resp) {
 		boolean result = false;
 		try {
-			resp.json().readObject();
+			this.jsonObject = resp.json().readObject();
 			result = true;
 		} catch (Exception e) {
 			result = false;
