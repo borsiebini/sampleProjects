@@ -19,16 +19,11 @@ public class RequestFromRepository {
 	
 	private String repositoryName;
 	private String repositoryUser;
-	private List<String> listOfAllBranches;
-	private List<String> listOfAllTags;
-	private List<String> listOfSetOfBranches;
-	private List<String> listOfSetOfTags;
 	private Github gitHub;
 	private JsonResponse resp;
 	private JsonArray arrayJson;
 	private List<JsonObject> listOfJsonObjects;
-	private Map<String, String> mapBranchToSha;
-	private Map<String, String> mapTagToSha;
+	private Map<String, String> mapKeyToSha;
 	private Set<Entry<String, String>> set;
 	private Iterator<Entry<String, String>> it;
 	private JsonObject jsonObject;
@@ -51,114 +46,26 @@ public class RequestFromRepository {
 	public void setRepositoryUser(String repositoryUser) {
 		this.repositoryUser = repositoryUser;
 	}
-	public List<String> getListOfAllBranches() {
-		return listOfAllBranches;
-	}
-	public void setListOfAllBranches(List<String> listOfAllBranches) {
-		this.listOfAllBranches = listOfAllBranches;
-	}
-	public List<String> getListOfAllTags() {
-		return listOfAllTags;
-	}
-	public void setListOfAllTags(List<String> listOfAllTags) {
-		this.listOfAllTags = listOfAllTags;
-	}
-	public List<String> getListOfSetOfBranches() {
-		return listOfSetOfBranches;
-	}
-	public void setListOfSetOfBranches(List<String> listOfSetOfBranches) {
-		this.listOfSetOfBranches = listOfSetOfBranches;
-	}
-	public List<String> getListOfSetOfTags() {
-		return listOfSetOfTags;
-	}
-	public void setListOfSetOfTags(List<String> listOfSetOfTags) {
-		this.listOfSetOfTags = listOfSetOfTags;
-	}
 	
-	public void getAllBranches() throws IOException {
-		if ( gitHub == null) {
-			System.out.println("MUST ESTABLISH A CONNECTION OBJECT... USER GetGitConnection TO RETRIEVE A CONNECTION OBJECT TO GIT.");
-			System.exit(1);
-		} else {
-			String path = String.format("/repos/%s/%s/branches", this.repositoryUser, this.repositoryName);
-			resp = gitHub.entry()
-					.uri().path(path)
-					.back()
-					.fetch()
-					.as(JsonResponse.class);
-			
-			if (isItJsonObject(resp) ) {
-				System.out.println("Failed to retrieve a JsonArray. Please make sure gitHub has the correct credentials");
-				System.out.println(resp.toString());
-				System.exit(2);
-			} else {
-				arrayJson = resp.json().readArray();
-				listOfJsonObjects = null;
-				
-				for (int i=0; i<arrayJson.size(); i++) {
-					if (  listOfJsonObjects == null)
-						listOfJsonObjects = new ArrayList<JsonObject>();
-					listOfJsonObjects.add(arrayJson.getJsonObject(i));
-				}
-				
-				String key = null;
-				String value = null;
-				
-				for (JsonObject object : listOfJsonObjects ) {
-					if (this.listOfAllBranches == null)
-						this.listOfAllBranches = new ArrayList<String>();
-					
-					key = object.getString("name");
-					value = object.getJsonObject("commit").getString("sha");
-					this.listOfAllBranches.add(key);
-					
-					if (this.mapBranchToSha == null)
-						this.mapBranchToSha = new HashMap<String, String>();
-					this.mapBranchToSha.put(key, value);
-					
-				}// end for loop.
-			}
-			
-
-//			arrayJson = resp.json().readArray();
-//			listOfJsonObjects = null;
-//			
-//			for (int i=0; i<arrayJson.size(); i++) {
-//				if (  listOfJsonObjects == null)
-//					listOfJsonObjects = new ArrayList<JsonObject>();
-//				listOfJsonObjects.add(arrayJson.getJsonObject(i));
-//			}
-//			
-//			String key = null;
-//			String value = null;
-//			
-//			for (JsonObject object : listOfJsonObjects ) {
-//				if (this.listOfAllBranches == null)
-//					this.listOfAllBranches = new ArrayList<String>();
-//				
-//				key = object.getString("name");
-//				value = object.getJsonObject("commit").getString("sha");
-//				this.listOfAllBranches.add(key);
-//				
-//				if (this.mapBranchToSha == null)
-//					this.mapBranchToSha = new HashMap<String, String>();
-//				this.mapBranchToSha.put(key, value);
-//				
-//			}// end for loop.
-			
+	public List<String> getAllBranches() throws IOException {
 		
-		}// end else-statement.
-		
+		return getList("/repos/%s/%s/branches");
 	}// end getAllBranches method.
 
-	public void getAllTags() throws IOException {
+	public List<String> getAllTags() throws IOException {
+		
+		return getList("/repos/%s/%s/tags");
+	}// end getAllTags method.
+	
+	private List<String> getList(String command) throws IOException {
 
+		List<String> result = null;
+			
 		if ( gitHub == null) {
 			System.out.println("MUST ESTABLISH A CONNECTION OBJECT... USER GetGitConnection TO RETRIEVE A CONNECTION OBJECT TO GIT.");
 			System.exit(1);
 		} else {
-			String path = String.format("/repos/%s/%s/tags", this.repositoryUser, this.repositoryName);
+			String path = String.format(command, this.repositoryUser, this.repositoryName);
 			resp = gitHub.entry()
 					.uri().path(path)
 					.back()
@@ -183,43 +90,41 @@ public class RequestFromRepository {
 				String value = null;
 				
 				for (JsonObject object : listOfJsonObjects ) {
-					if (this.listOfAllTags == null)
-						this.listOfAllTags = new ArrayList<String>();
+					if (result == null)
+						result = new ArrayList<String>();
 					
 					key = object.getString("name");
 					value = object.getJsonObject("commit").getString("sha");
-					this.listOfAllTags.add(key);
+					result.add(key);
 					
-					if ( this.mapTagToSha == null)
-						this.mapTagToSha = new HashMap<String, String>();
-					this.mapTagToSha.put(key, value);
+					if ( this.mapKeyToSha == null)
+						this.mapKeyToSha = new HashMap<String, String>();
+					this.mapKeyToSha.put(key, value);
 				}// end for loop.
 			}
 			
-			
 		}// end else-statement.
 		
-	}// end getAllTags method.
+		return result;
+	}
 	
-	public void findObjectWith(String filename, String selection) throws IOException {
+	
+	public List<String> findObjectWith(String filename) throws IOException {
 
 		if ( gitHub == null) {
 			System.out.println("MUST ESTABLISH A CONNECTION OBJECT... USER GetGitConnection TO RETRIEVE A CONNECTION OBJECT TO GIT.");
 			System.exit(1);
+			return null;
 		} else {
-			if ( selection.equals("BRANCH")) {
-				filter(this.mapBranchToSha, filename);
-			} else {
-				filter(this.mapTagToSha, filename);
-			}
-			
+			return filter(this.mapKeyToSha, filename);
 		}// end else-statement.
 	}
 	
-	private void filter(Map<String, String> map, String filer) throws IOException {
+	private List<String> filter(Map<String, String> map, String filer) throws IOException {
 		set = map.entrySet();
 		it = set.iterator();
 		Entry<String, String> entry = null;
+		List<String> result = null;
 		while (it.hasNext()) {
 			entry = it.next();
 			String path = String.format("/repos/%s/%s/git/trees/%s", 
@@ -252,59 +157,14 @@ public class RequestFromRepository {
 			}// end for loop.
 
 			if ( !hasIt) {
-				if ( this.listOfSetOfBranches == null)
-					this.listOfSetOfBranches = new ArrayList<String>();
-				this.listOfSetOfBranches.add(entry.getKey());
+				if ( result == null)
+					result= new ArrayList<String>();
+				result.add(entry.getKey());
 			}
 			
-			
-//			if ( isItJsonObject(resp) ) {
-//			
-//				jsonObject = resp.json().readObject();
-//				arrayJson = jsonObject.getJsonArray("tree");
-//				listOfJsonObjects = null;
-//
-//				for (int i=0; i<arrayJson.size(); i++) {
-//					if (  listOfJsonObjects == null)
-//						listOfJsonObjects = new ArrayList<JsonObject>();
-//					listOfJsonObjects.add(arrayJson.getJsonObject(i));
-//				}
-//
-//				String filePath = null;
-//				boolean hasIt = false;
-//				for (JsonObject object : listOfJsonObjects ) {
-//					filePath = object.getString("path");
-//
-//					if (filePath.equals(filer)) {
-//						hasIt = true;
-//						break;
-//					}
-//				}// end for loop.
-//
-//				if ( !hasIt) {
-//					if ( this.listOfSetOfBranches == null)
-//						this.listOfSetOfBranches = new ArrayList<String>();
-//					this.listOfSetOfBranches.add(entry.getKey());
-//				}
-//			
-//			} else {
-//				System.out.println("Failed to retrieve JsonObject ");
-//				System.out.println(resp);
-//				System.exit(4);
-//			}
-			
 		}// end while loop.
-	}
-	
-	
-	private void printMap(Map<String, String> map) {
-		set = map.entrySet();
-		it = set.iterator();
-		Entry<String, String> entry = null;
-		while (it.hasNext()) {
-			entry = it.next();
-			System.out.printf("Key: %s  Value: %s \n", entry.getKey(), entry.getValue());
-		}
+		
+		return result;
 	}
 	
 	private boolean isItJsonObject(JsonResponse resp) {

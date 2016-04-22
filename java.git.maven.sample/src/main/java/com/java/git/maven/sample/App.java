@@ -22,45 +22,49 @@ public class App
     	String userRepo = "ruby";
     	String repoName = "ruby";
     	
-    	//GetGitConnection.establishConnection(auth);
-    	GetGitConnection.establishConnection();
+    	GetGitConnection.establishConnection("f3c0fb32291560175368b9717c528038b5a1b0cd");
+    	
+    	//GetGitConnection.establishConnection();
+    	
     	gitHub = GetGitConnection.getGitHub();
     	request = new RequestFromRepository();
     	request.setGitHub(gitHub);
     	request.setRepositoryName(repoName);
     	request.setRepositoryUser(userRepo);
     	
-    	request.getAllBranches();
-    	List<String> branches = request.getListOfAllBranches();
+    	List<String> branches = request.getAllBranches();
     	for (String s : branches) {
     		System.out.println("Branch: "+s);
-    	}
+    	}// end loop.
     	
     	System.out.println();
-    	System.out.println();
     	
-    	request.findObjectWith(".travis.yml", "BRANCH");
-    	List<String> list = request.getListOfSetOfBranches();
+    	List<String> list = request.findObjectWith(".travis.yml");
     	
     	for ( String s : list) {
     		System.out.println("Branch: "+s+" does not have .travis.yml");
-    	}
+    	}// end loop
     	
-    	request.getAllTags();
-    	List<String> tags = request.getListOfAllTags();
+
+    	System.out.println();
+    	System.out.println();
+    	
+    	List<String> tags = request.getAllTags();
     	for ( String s: tags) {
     		System.out.println("Tag: "+s);
-    	}
+    	}// end loop.
     	
     	System.out.println();
-    	System.out.println();
     	
-    	request.findObjectWith(".travis.yml", "TAG");
-    	list = request.getListOfSetOfBranches();
+    	list = request.findObjectWith(".travis.yml");
     	
     	for ( String s : list) {
     		System.out.println("Tag: "+s+" does not have .travis.yml");
-    	}
+    	}// end loop.
     	
-    }
-}
+    }// end main.
+	
+	
+	
+	
+}// end App.
