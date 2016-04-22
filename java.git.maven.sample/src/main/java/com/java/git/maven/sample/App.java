@@ -22,8 +22,6 @@ public class App
     	String userRepo = "ruby";
     	String repoName = "ruby";
     	
-    	GetGitConnection.establishConnection("f3c0fb32291560175368b9717c528038b5a1b0cd");
-    	
     	//GetGitConnection.establishConnection();
     	
     	gitHub = GetGitConnection.getGitHub();
