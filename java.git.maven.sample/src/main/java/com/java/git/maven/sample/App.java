@@ -18,11 +18,11 @@ public class App
 
 	public static void main( String[] args ) throws IOException
     {
-    	
-    	String userRepo = "ruby";
+		
+		String userRepo = "ruby";
     	String repoName = "ruby";
     	
-    	//GetGitConnection.establishConnection();
+    	GetGitConnection.establishConnection();
     	
     	gitHub = GetGitConnection.getGitHub();
     	request = new RequestFromRepository();

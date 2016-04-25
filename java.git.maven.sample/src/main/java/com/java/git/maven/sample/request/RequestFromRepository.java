@@ -48,21 +48,21 @@ public class RequestFromRepository {
 	}
 	
 	public List<String> getAllBranches() throws IOException {
-		
+		System.out.println("*** Start getAllBranches ***");
 		return getList("/repos/%s/%s/branches");
 	}// end getAllBranches method.
 
 	public List<String> getAllTags() throws IOException {
-		
+		System.out.println("*** Start getAllTags ***");
 		return getList("/repos/%s/%s/tags");
 	}// end getAllTags method.
 	
 	private List<String> getList(String command) throws IOException {
-
+		System.out.println("*** Start getList ***");
 		List<String> result = null;
 			
 		if ( gitHub == null) {
-			System.out.println("MUST ESTABLISH A CONNECTION OBJECT... USER GetGitConnection TO RETRIEVE A CONNECTION OBJECT TO GIT.");
+			System.out.println("Error: MUST ESTABLISH A CONNECTION OBJECT... USER GetGitConnection TO RETRIEVE A CONNECTION OBJECT TO GIT.");
 			System.exit(1);
 		} else {
 			String path = String.format(command, this.repositoryUser, this.repositoryName);
@@ -104,20 +104,23 @@ public class RequestFromRepository {
 			}
 			
 		}// end else-statement.
-		
+		System.out.println("*** End getList ***");
 		return result;
 	}
 	
 	
 	public List<String> findObjectWith(String filename) throws IOException {
 
+		System.out.println("*** Start FindObjectWith ***");
+		List<String> result = null;
 		if ( gitHub == null) {
-			System.out.println("MUST ESTABLISH A CONNECTION OBJECT... USER GetGitConnection TO RETRIEVE A CONNECTION OBJECT TO GIT.");
+			System.out.println("ERROR: MUST ESTABLISH A CONNECTION OBJECT... USER GetGitConnection TO RETRIEVE A CONNECTION OBJECT TO GIT.");
 			System.exit(1);
-			return null;
 		} else {
-			return filter(this.mapKeyToSha, filename);
+			result =  filter(this.mapKeyToSha, filename);
 		}// end else-statement.
+		System.out.println("*** End FindObjectWith ***");
+		return result;
 	}
 	
 	private List<String> filter(Map<String, String> map, String filer) throws IOException {
