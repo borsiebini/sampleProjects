@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+JCabi-Version: 0.28
+JCabi-Build: java.git.maven.sample_04252016_1044
+JCabi-Date: 04/25/2016
+Created-By: 1.8.0_51
+Main-Class: com.java.git.maven.sample.App
